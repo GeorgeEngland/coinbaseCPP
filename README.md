@@ -5,6 +5,36 @@
 ### docker run --rm -it  cpp:latest
 ## Run Benchmarks
 ### ./build/release/testMe
+
+--------------------------------------------------------------------
+
+Benchmark                          Time             CPU   Iterations
+
+--------------------------------------------------------------------
+
+BM_HANDLE_SNAP                  9.02 ms         9.02 ms           68
+
+BM_HANDLE_L2                   0.463 us        0.463 us      1521808
+
+BM_HANDLE_X_L2THREADS/1         54.0 us         40.4 us        17556
+
+BM_HANDLE_X_L2THREADS/2         72.9 us         60.6 us        11561
+
+BM_HANDLE_X_L2THREADS/4          115 us          103 us         6915
+
+BM_HANDLE_X_L2THREADS/8          276 us          269 us         2495
+
+BM_HANDLE_X_L2THREADS/16         709 us          694 us         1017
+
+BM_HANDLE_X_L2THREADS/32        1322 us         1298 us          552
+
+BM_HANDLE_X_L2THREADS/64        2284 us         2253 us          299
+
+BM_HANDLE_X_L2THREADS/128       4287 us         4237 us          163
+
+BM_HANDLE_X_L2THREADS/256       8331 us         8244 us           84
+
+
 ## Run App
 ### ./build/release/coin
 Expect Your Book to look like:
