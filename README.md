@@ -1,4 +1,5 @@
 # coinbaseCPP
+Uses gcc Docker Image.
 ## Build Docker Image
 ### docker build --pull --rm -f "Dockerfile" -t cpp:latest "."
 ## Enter Docker Image
