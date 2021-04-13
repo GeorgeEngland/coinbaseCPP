@@ -13,12 +13,13 @@ static void BM_HANDLE_SNAP(benchmark::State& state) {
     orderBook oBook;
   for (auto _ : state) {
     // This code gets timed
+    for(int i=0;i<state.range(0);i++)
     oBook.handleMessage("snapshot",snap);
 
   }
 }
 // Register the function as a benchmark
-BENCHMARK(BM_HANDLE_SNAP)->Unit(benchmark::TimeUnit::kMillisecond);
+BENCHMARK(BM_HANDLE_SNAP)->RangeMultiplier(2)->Range(1<<0,1<<4)->Unit(benchmark::TimeUnit::kMillisecond);
 
 static void BM_HANDLE_L2(benchmark::State& state) {
   // Perform setup here

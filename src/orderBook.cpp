@@ -1,6 +1,7 @@
 #include "orderBook.h"
 #include <iostream>
 #include <json/json.h>
+#include <vector>
 void orderBook::handleMessage(std::string type, Json::Value& msg){
     if(type=="snapshot")handleSnapshot(msg);
     if(type=="l2update")handleL2Update(msg);
@@ -29,7 +30,6 @@ void orderBook::handleL2Update(Json::Value &data){
     if(instruction=="buy"){
         handleSell(price,quant);
     }
-    displayBook(10);
 
 
 }
@@ -170,6 +170,7 @@ void orderBook::handleSell(int price, float quant){
     }
 
 }
+
 
 void orderBook::displayBook(int depth){
     std::cout<<"\n__________ YOUR BOOK ___________\n\n";

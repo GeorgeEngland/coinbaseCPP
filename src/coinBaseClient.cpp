@@ -16,6 +16,8 @@ web::websockets::client::websocket_callback_client client,Json::Value message)
 
     _wsClient.set_message_handler([this](web::websockets::client::websocket_incoming_message msg){
         const std::lock_guard<std::mutex> lock(mu);
+        _oBook->displayBook(10);
+
         onReceive(msg);
     });
     _wsClient.set_close_handler([this](web::websockets::client::websocket_close_status close_status, const utility::string_t &reason, const std::error_code &error){
