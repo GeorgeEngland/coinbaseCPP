@@ -16,7 +16,6 @@ void orderBook::handleMessageTest(std::string type){
 }
 
 void orderBook::handleTicker(Json::Value &data){
-    displayBook(10);
 }
 void orderBook::handleL2Update(Json::Value &data){
 
@@ -30,6 +29,8 @@ void orderBook::handleL2Update(Json::Value &data){
     if(instruction=="buy"){
         handleSell(price,quant);
     }
+    displayBook(10);
+
 
 }
 void orderBook::handleSnapshot(Json::Value &data){
