@@ -5,7 +5,7 @@
 class coinBaseClient{
     std::string _wsAddress;
     web::websockets::client::websocket_callback_client _wsClient;
-    Json::Value parseBody(const std::string &body);
+    Json::Value _parseBody(const std::string &body);
     std::mutex mu;
 
     public:

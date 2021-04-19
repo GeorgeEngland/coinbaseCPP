@@ -40,7 +40,7 @@ void coinBaseClient::onOpen(Json::Value message){
 
 void coinBaseClient::onReceive(std::string body){
         const std::lock_guard<std::mutex> lock(mu);
-        Json::Value out = parseBody(body);
+        Json::Value out = _parseBody(body);
         if(out != Json::ValueType::nullValue){
         std::string type = out["type"].asString();
         _oBook->handleMessage(out["type"].asString(),out);
@@ -48,7 +48,7 @@ void coinBaseClient::onReceive(std::string body){
         _oBook->displayBook(10);
 }
 
-Json::Value coinBaseClient::parseBody(const std::string &body){
+Json::Value coinBaseClient::_parseBody(const std::string &body){
         Json::CharReaderBuilder builder;
         Json::Value out;
         Json::String errs;

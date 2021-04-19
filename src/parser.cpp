@@ -18,15 +18,16 @@ int Parser::parseInput(int argc,char const* argv[]){
     }
     for (int i = 1; i <= argc - 2; i += 2) {
         const std::string opt(argv[i]);
+        std::cout<<"Option: "<<opt<<std::endl;
         if (opt == "--instrument") {
             m_instrument = argv[i + 1];
         } 
 
         else {
-            std::cerr << "Unknown option " << opt << ", usage:"; usage(argv); exit(1);
+            std::cerr << "Unknown option " << opt << ", usage:"; usage(argv);
         }
     }
-    std::clog<<"Instument: '"<< m_instrument<<"'"<<std::endl;   
+    std::cout<<"Instrument: '"<< m_instrument<<"'"<<std::endl;   
 
 }
 std::string Parser::getInstrument(){

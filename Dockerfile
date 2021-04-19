@@ -43,5 +43,6 @@ RUN cd build && mkdir debug && cd debug && cmake -DCMAKE_BUILD_TYPE=Debug ../.. 
 && cmake --build .
 #Enter Container with: docker run --rm -it  cpp:latest
 #Run With ./build/coin (else process cannot be stopped directly with Ctrl-C)
-
+ENTRYPOINT [ "./build/debug/coin"]
+CMD ["--instrument","ETH-USD"]
 LABEL Name=CoinPP Version=0.0.1
