@@ -28,7 +28,9 @@ void orderBook::handleL2Update(Json::Value &data){
         handleBuy(price,quant);
     }
     if(instruction=="buy"){
+
         handleSell(price,quant);
+
     }
 
 
@@ -127,44 +129,47 @@ void orderBook::handleSell(int price, float quant){
     while(toOperateOn!=nullptr && price<toOperateOn->price){
         toOperateOn=toOperateOn->next;
     }
-    if(toOperateOn==nullptr){
-        std::cout<<"Inserting To End"<<std::endl;
+    if(!toOperateOn){
+        
         orderItem* insertItem = new orderItem(price,quant);
         toOperateOn->prev->next=insertItem;
         insertItem->prev= toOperateOn->prev;
+        toOperateOn->next=nullptr;
         return;
     }
-    if(toOperateOn->price==price){
-        //edit quant
-        toOperateOn->quant=quant;
-        if(quant==0 && toOperateOn->prev){
-            toOperateOn->prev->next=toOperateOn->next;
-            toOperateOn->next->prev=toOperateOn->prev;
-            delete(toOperateOn);
-        }
-        else if(quant==0){
-            _bidHead=toOperateOn->next;
-            _bidHead->prev=nullptr;
-            delete(toOperateOn);
-        }
-    }
     else{
-
-        //insert into list
-        toOperateOn=toOperateOn->prev;
-
-        orderItem* insertItem = new orderItem(price,quant,toOperateOn);
-        if(quant!=0){
-            if(toOperateOn){
-            insertItem->next = toOperateOn ->next;
-            toOperateOn->next = insertItem;
-            insertItem->next->prev=insertItem;
+        if(toOperateOn->price==price){
+            //edit quant
+            toOperateOn->quant=quant;
+            if(quant==0 && toOperateOn->prev){
+                toOperateOn->prev->next=toOperateOn->next;
+                toOperateOn->next->prev=toOperateOn->prev;
+                delete(toOperateOn);
             }
-            else{
-                orderItem* tmp = _bidHead;
-                insertItem->next=tmp;
-                tmp->prev = insertItem;
-                _bidHead = insertItem;
+            else if(quant==0){
+                _bidHead=toOperateOn->next;
+                _bidHead->prev=nullptr;
+                delete(toOperateOn);
+            }
+        }
+        else{
+
+            //insert into list
+            toOperateOn=toOperateOn->prev;
+
+            orderItem* insertItem = new orderItem(price,quant,toOperateOn);
+            if(quant!=0){
+                if(toOperateOn){
+                insertItem->next = toOperateOn ->next;
+                toOperateOn->next = insertItem;
+                insertItem->next->prev=insertItem;
+                }
+                else{
+                    orderItem* tmp = _bidHead;
+                    insertItem->next=tmp;
+                    tmp->prev = insertItem;
+                    _bidHead = insertItem;
+                }
             }
         }
     }

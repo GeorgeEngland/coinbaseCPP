@@ -15,5 +15,5 @@ message("CMAKE_CXX_FLAGS is ${CMAKE_CXX_FLAGS}")
 add_executable(coin coinAPI.cpp ./src/jsoncpp.cpp ./src/coinBaseClient.cpp ./src/orderBook.cpp ./src/parser.cpp)
 target_link_libraries(coin PRIVATE pthread cpprestsdk::cpprest)
 
-add_executable(testMe ./test/main.cpp ./src/jsoncpp.cpp ./src/orderBook.cpp)
-target_link_libraries(testMe benchmark::benchmark)
+add_executable(testMe ./test/main.cpp ./src/jsoncpp.cpp ./src/orderBook.cpp ./src/coinBaseClient.cpp)
+target_link_libraries(testMe benchmark::benchmark pthread cpprestsdk::cpprest)

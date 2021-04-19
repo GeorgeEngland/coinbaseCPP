@@ -5,12 +5,16 @@
 class coinBaseClient{
     std::string _wsAddress;
     web::websockets::client::websocket_callback_client _wsClient;
-    orderBook *_oBook;
-    std::mutex _mx;
+    Json::Value parseBody(const std::string &body);
+    std::mutex mu;
+
     public:
+    orderBook *_oBook;
     coinBaseClient(std::string wsAddr, web::websockets::client::websocket_callback_client client,Json::Value message );
     coinBaseClient()=delete;
     void onOpen(Json::Value message);
-    void onReceive(web::websockets::client::websocket_incoming_message msg);
+    void connect(Json::Value message);
+    void test(std::string s){return;}
+    void onReceive(std::string body);
     void onClose(web::websockets::client::websocket_close_status close_status, const utility::string_t &reason, const std::error_code &error);
 };

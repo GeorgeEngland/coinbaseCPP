@@ -1,5 +1,11 @@
 #include <json/json.h>
 #include <iostream>
+
+#ifndef ORDERBOOK_H
+#define ORDERBOOK_H
+
+
+
 class orderItem{
     public:
     orderItem(int pr,float quan, orderItem* pre):
@@ -35,3 +41,4 @@ class orderBook{
     orderBook():_bidHead(nullptr),_askHead(nullptr){}
 
 };
+#endif /* ORDERBOOK_H */

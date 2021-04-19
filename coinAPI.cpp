@@ -27,7 +27,8 @@ int main(int argc, char const *argv[]) {
   root["channels"][1]="heartbeat";
   root["channels"][2]=infoRoot;
 
-  coinBaseClient(address,client,root);
+  coinBaseClient c(address,client,root);
+  c.connect(root);
   std::this_thread::sleep_for(10s);
   std::cout<<"Shutting Down AT End Of Thread Length"<<std::endl;
 
