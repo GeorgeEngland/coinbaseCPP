@@ -39,8 +39,9 @@ RUN rm -r jsoncpp
 
 RUN mkdir build && cd build && mkdir release && cd release && cmake -DCMAKE_BUILD_TYPE=Release ../.. \
 && cmake --build .
-RUN mkdir build && cd build && mkdir debug && cd debug && cmake -DCMAKE_BUILD_TYPE=Debug ../.. \
+RUN cd build && mkdir debug && cd debug && cmake -DCMAKE_BUILD_TYPE=Debug ../.. \
 && cmake --build .
 #Enter Container with: docker run --rm -it  cpp:latest
 #Run With ./build/coin (else process cannot be stopped directly with Ctrl-C)
+
 LABEL Name=CoinPP Version=0.0.1
