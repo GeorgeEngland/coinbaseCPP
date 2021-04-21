@@ -4,7 +4,6 @@
 #include <iostream>
 #include <json/json.h>
 #include <mutex>
-
 coinBaseClient::coinBaseClient(std::string wsAddr,Json::Value message)
 :_wsAddress(wsAddr){
 }
