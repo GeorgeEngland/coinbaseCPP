@@ -21,7 +21,7 @@ int Parser::parseInput(int argc,char const* argv[]){
         std::cout<<"Option: "<<opt<<std::endl;
         if (opt == "--instrument") {
             m_instrument = argv[i + 1];
-        } 
+         } 
 
         else {
             std::cerr << "Unknown option " << opt << ", usage:"; usage(argv);

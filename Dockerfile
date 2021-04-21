@@ -29,6 +29,8 @@ RUN apt-get update && \
       apt-get -y install sudo
 RUN sudo apt-get install -y cmake libcpprest-dev libjsoncpp-dev
 
+RUN sudo apt-get install -y sqlite3 libsqlite3-dev
+
 
 
 RUN git clone https://github.com/open-source-parsers/jsoncpp 
@@ -41,6 +43,7 @@ RUN mkdir build && cd build && mkdir release && cd release && cmake -DCMAKE_BUIL
 && cmake --build .
 RUN cd build && mkdir debug && cd debug && cmake -DCMAKE_BUILD_TYPE=Debug ../.. \
 && cmake --build .
+
 #Enter Container with: docker run --rm -it  cpp:latest
 #Run With ./build/coin (else process cannot be stopped directly with Ctrl-C)
 ENTRYPOINT [ "./build/debug/coin"]

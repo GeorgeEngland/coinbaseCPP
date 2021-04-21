@@ -13,7 +13,6 @@ int main(int argc, char const *argv[]) {
   Parser p;
   if(p.parseInput(argc,argv)==1)return -1;
   
-  websocket_callback_client client;
   Json::Value root;
   Json::Value infoRoot;
   std::string address= "wss://ws-feed.pro.coinbase.com";
@@ -27,8 +26,8 @@ int main(int argc, char const *argv[]) {
   root["channels"][1]="heartbeat";
   root["channels"][2]=infoRoot;
 
-  coinBaseClient c(address,client,root);
-  c.connect(root);
+  coinBaseClient c(address,root);
+  c.connect2(root);
   std::this_thread::sleep_for(10s);
   std::cout<<"Shutting Down AT End Of Thread Length"<<std::endl;
 
