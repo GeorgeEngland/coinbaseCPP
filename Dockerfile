@@ -38,7 +38,7 @@ RUN cd jsoncpp && mkdir -p build/debug && cd build/debug && cmake -DCMAKE_BUILD_
 RUN cd jsoncpp && python3 amalgamate.py && cp -r -p ./dist/* ../src/
 # This command compiles your app using GCC, adjust for your source code
 RUN rm -r jsoncpp
-
+RUN rm -r build
 RUN mkdir build && cd build && mkdir release && cd release && cmake -DCMAKE_BUILD_TYPE=Release ../.. \
 && cmake --build .
 RUN cd build && mkdir debug && cd debug && cmake -DCMAKE_BUILD_TYPE=Debug ../.. \
@@ -46,6 +46,6 @@ RUN cd build && mkdir debug && cd debug && cmake -DCMAKE_BUILD_TYPE=Debug ../.. 
 
 #Enter Container with: docker run --rm -it  cpp:latest
 #Run With ./build/coin (else process cannot be stopped directly with Ctrl-C)
-ENTRYPOINT [ "./build/debug/coin"]
-CMD ["--instrument","ETH-USD"]
+#ENTRYPOINT [ "./build/debug/coin"]
+#CMD ["--instrument","ETH-USD"]
 LABEL Name=CoinPP Version=0.0.1

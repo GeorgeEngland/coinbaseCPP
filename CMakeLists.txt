@@ -9,8 +9,9 @@ find_package(cpprestsdk REQUIRED)
 
 find_package(benchmark REQUIRED)
 
+message(STATUS "RestSDK Lib is ${cpprestsdk_DIR}")
 
-message("CMAKE LIB ARCH is ${CMAKE_LIBRARY_ARCHITECTURE}")
+message(STATUS "Benchmark Lib is ${benchmark_DIR}")
 
 
 add_executable(coin coinAPI.cpp ./src/jsoncpp.cpp ./src/coinBaseClient.cpp ./src/orderBook.cpp ./src/parser.cpp)
