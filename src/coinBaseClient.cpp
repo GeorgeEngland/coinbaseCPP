@@ -4,6 +4,7 @@
 #include <iostream>
 #include <json/json.h>
 #include <mutex>
+#include "timer.h"
 coinBaseClient::coinBaseClient(std::string wsAddr,Json::Value message)
 :_wsAddress(wsAddr){
 }
@@ -14,12 +15,21 @@ void coinBaseClient::connect2(Json::Value message){
         onOpen(message);
         
     }).wait();
-
     set_message_handler([this](web::websockets::client::websocket_incoming_message msg){
-        msg.extract_string().then([&](std::string body) {
+//        Timer* t1 = new Timer("Whole Function");
+
+        msg.extract_string().then([this](std::string body) {
+//            Timer* t2 = new Timer("Algo");
+            mu.lock();
             onReceive(body);
-        }).wait();
+//            delete(t2);
+//            delete(t1);
+            mu.unlock();
+
+        });
     });
+    std::cout<<"Setting Message Handler: "<<std::endl;
+
 
     set_close_handler([this](web::websockets::client::websocket_close_status close_status, const utility::string_t &reason, const std::error_code &error){
         onClose(close_status,reason,error);
@@ -38,10 +48,10 @@ void coinBaseClient::onOpen(Json::Value message){
 }
 
 void coinBaseClient::onReceive(std::string body){
-        const std::lock_guard<std::mutex> lock(mu);
         Json::Value out = _parseBody(body);
         if(out != Json::ValueType::nullValue){
             std::string type = out["type"].asString();
+           // Timer t3("\nHandle Message");
             _oBook->handleMessage(out["type"].asString(),out);
         }
 

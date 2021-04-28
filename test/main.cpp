@@ -56,18 +56,22 @@ static void BM_HANDLE_X_L2THREADS(benchmark::State& state) {
     oBook->handleMessage("snapshot",snap);
     
     oBook->testVal = snap2;
-  for (auto _ : state) {
     std::vector<std::thread> t;
+
+  for (auto _ : state) {
     std::string type = "l2update";
     for(int i = 0; i<state.range(0);i++){
-      t.push_back(std::thread(&orderBook::handleMessageTest, oBook,type));
+      oBook->handleMessageTest(type);
+      //t.push_back(std::thread(&orderBook::handleMessageTest, oBook,type));
+      t.push_back(std::thread([](){return 0;}) );
     }
-    for(auto &th : t){
-      th.join();
-    }
+    
     // This code gets timed
     //oBook.handleMessage("l2update",snap2);
   }
+  for(auto &th : t){
+      th.join();
+    }
   delete(oBook);
 
 }

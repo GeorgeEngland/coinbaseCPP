@@ -9,10 +9,10 @@ void orderBook::handleMessage(std::string type, Json::Value& msg){
     return;
 }
 void orderBook::handleMessageTest(std::string type){
-    Json::Value msg = testVal;
-    if(type=="snapshot")handleSnapshot(msg);
-    if(type=="l2update")handleL2Update(msg);
-    if(type=="ticker")handleTicker(msg);
+    //Json::Value msg = testVal;
+    if(type=="snapshot")handleSnapshot(testVal);
+    if(type=="l2update")handleL2Update(testVal);
+    if(type=="ticker")handleTicker(testVal);
     return;
 }
 
