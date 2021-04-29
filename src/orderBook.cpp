@@ -19,7 +19,7 @@ void orderBook::handleMessageTest(std::string type){
 void orderBook::handleTicker(Json::Value &data){
 }
 void orderBook::handleL2Update(Json::Value &data){
-
+    
     std::string instruction = data["changes"][0][0].asString();
     int price = std::stof(data["changes"][0][1].asString())*100;
     float quant = std::stof(data["changes"][0][2].asString());
@@ -36,7 +36,6 @@ void orderBook::handleL2Update(Json::Value &data){
 
 }
 void orderBook::handleSnapshot(Json::Value &data){
-
     Json::Value f = data["asks"];
 
     int askHeadPrice = std::stof(data["asks"][0][0].asString())*100;

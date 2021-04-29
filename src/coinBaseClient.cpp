@@ -5,22 +5,27 @@
 #include <json/json.h>
 #include <mutex>
 #include "timer.h"
+
 coinBaseClient::coinBaseClient(std::string wsAddr,Json::Value message)
-:_wsAddress(wsAddr){
-}
+:_wsAddress(wsAddr){}
+
 void coinBaseClient::connect2(Json::Value message){
     
     connect(_wsAddress).then([message,this](){
+        for(auto instrument : message["product_ids"]){
+            this->_books[instrument.asString()]=new orderBook();
+        }
         _oBook = new orderBook();
         onOpen(message);
         
     }).wait();
     set_message_handler([this](web::websockets::client::websocket_incoming_message msg){
 //        Timer* t1 = new Timer("Whole Function");
-
+        _ordersProcessed++;
         msg.extract_string().then([this](std::string body) {
 //            Timer* t2 = new Timer("Algo");
             mu.lock();
+            
             onReceive(body);
 //            delete(t2);
 //            delete(t1);
@@ -28,7 +33,7 @@ void coinBaseClient::connect2(Json::Value message){
 
         });
     });
-    std::cout<<"Setting Message Handler: "<<std::endl;
+    std::cout<<"Set Message Handler"<<std::endl;
 
 
     set_close_handler([this](web::websockets::client::websocket_close_status close_status, const utility::string_t &reason, const std::error_code &error){
@@ -49,13 +54,23 @@ void coinBaseClient::onOpen(Json::Value message){
 
 void coinBaseClient::onReceive(std::string body){
         Json::Value out = _parseBody(body);
-        if(out != Json::ValueType::nullValue){
+        std::chrono::high_resolution_clock::time_point tNow = std::chrono::high_resolution_clock::now();
+        if((tNow-_tStart).count()>100000000){
+            std::cout<<"\nOrders Processed: "<<_ordersProcessed<<" Type: "<<out["product_id"].asString()<<std::endl;
+            std::cout<<"Time Taken: "<<(std::chrono::high_resolution_clock::now()-_tStart).count()/1000000<<" ms"<<std::endl;
+            _tStart = std::chrono::high_resolution_clock::now();
+            _ordersProcessed=0;
+
+        }
+        if(out != Json::ValueType::nullValue && out["product_id"] != Json::ValueType::nullValue){
             std::string type = out["type"].asString();
            // Timer t3("\nHandle Message");
-            _oBook->handleMessage(out["type"].asString(),out);
+           _books[out["product_id"].asString()]->handleMessage(out["type"].asString(),out);
+             std::cout<<"BOOK NAME: "<<out["product_id"].asString()<<std::endl;
+             _books[out["product_id"].asString()]->displayBook(10);
         }
 
-        _oBook->displayBook(10);
+        //_oBook->displayBook(10);
 }
 
 Json::Value coinBaseClient::_parseBody(const std::string &body){
@@ -73,6 +88,7 @@ Json::Value coinBaseClient::_parseBody(const std::string &body){
 
 void coinBaseClient::onClose(web::websockets::client::websocket_close_status close_status, const utility::string_t &reason, const std::error_code &error){
     delete(_oBook);
+
     std::cout<<"Client closed with error code: "<<error<<std::endl;
     std::cout<<"Reason: "<< reason<<std::endl;
 }

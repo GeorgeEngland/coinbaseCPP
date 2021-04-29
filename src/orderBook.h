@@ -4,8 +4,6 @@
 #ifndef ORDERBOOK_H
 #define ORDERBOOK_H
 
-
-
 class orderItem{
     public:
     orderItem(int pr,float quan, orderItem* pre):
@@ -22,6 +20,7 @@ class orderItem{
         orderItem* next;
         orderItem* prev;
 };
+
 class orderBook{
     orderItem* _bidHead;
     orderItem* _askHead;
@@ -33,7 +32,6 @@ class orderBook{
 
     public:
     Json::Value testVal;
-
     void test(std::string msg){return;}
     void displayBook(int depth);
     void handleMessage(std::string type, Json::Value& msg);

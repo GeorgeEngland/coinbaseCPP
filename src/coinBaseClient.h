@@ -2,13 +2,17 @@
 #include <json/json.h>
 #include "orderBook.h"
 #include <mutex>
+#include <atomic>
+#include <unordered_map>
 class coinBaseClient : web::web_sockets::client::websocket_callback_client{
     std::string _wsAddress;
-    
     Json::Value _parseBody(const std::string &body);
     std::mutex mu;
+    std::atomic<int> _ordersProcessed{0};
+    std::chrono::high_resolution_clock::time_point _tStart;
 
     public:
+    std::unordered_map<std::string,orderBook*> _books;
     orderBook *_oBook;
     coinBaseClient(std::string wsAddr,Json::Value message );
     coinBaseClient()=delete;
