@@ -60,10 +60,10 @@ void coinBaseClient::onReceive(std::string body){
             std::cout<<"Time Taken: "<<(std::chrono::high_resolution_clock::now()-_tStart).count()/1000000<<" ms"<<std::endl;
             _tStart = std::chrono::high_resolution_clock::now();
             _ordersProcessed=0;
-
         }
+        
         if(out != Json::ValueType::nullValue && out["product_id"] != Json::ValueType::nullValue){
-            std::string type = out["type"].asString();
+            //std::string type = out["type"].asString();
            // Timer t3("\nHandle Message");
            _books[out["product_id"].asString()]->handleMessage(out["type"].asString(),out);
              std::cout<<"BOOK NAME: "<<out["product_id"].asString()<<std::endl;
@@ -88,6 +88,7 @@ Json::Value coinBaseClient::_parseBody(const std::string &body){
 
 void coinBaseClient::onClose(web::websockets::client::websocket_close_status close_status, const utility::string_t &reason, const std::error_code &error){
     delete(_oBook);
+    for (auto &i : _books)delete(&i);
 
     std::cout<<"Client closed with error code: "<<error<<std::endl;
     std::cout<<"Reason: "<< reason<<std::endl;
