@@ -86,10 +86,19 @@ if( rc ) {
   std::string address= "wss://ws-feed.pro.coinbase.com";
 
   infoRoot["name"]="ticker";
-  infoRoot["product_ids"][0]=p.getInstrument();
+  auto instruments = p.getInstruments();
+  for(int i = 0; i< instruments.size();i++ ){
+     infoRoot["product_ids"][i] = instruments.at(i);
+     root["product_ids"][i] = instruments.at(i);
+  }
 
   root["type"]="subscribe";
-  root["product_ids"][0]=p.getInstrument();
+ /* root["product_ids"][1]="BTC-USD";
+  root["product_ids"][1]="BTC-GBP";
+  root["product_ids"][1]="ETH-GBP";
+   infoRoot["product_ids"][1]="BTC-USD";
+  infoRoot["product_ids"][1]="BTC-GBP";
+  infoRoot["product_ids"][1]="ETH-GBP";*/
   root["channels"][0]="level2";
   root["channels"][1]="heartbeat";
   root["channels"][2]=infoRoot;
