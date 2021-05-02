@@ -14,8 +14,8 @@ message(STATUS "RestSDK Lib is ${cpprestsdk_DIR}")
 message(STATUS "Benchmark Lib is ${benchmark_DIR}")
 
 
-add_executable(coin coinAPI.cpp ./src/jsoncpp.cpp ./src/coinBaseClient.cpp ./src/orderBook.cpp ./src/parser.cpp)
+add_executable(coin coinAPI.cpp ./src/jsoncpp.cpp ./src/coinBaseClient.cpp ./src/orderBook.cpp ./src/parser.cpp ./src/database.cpp)
 target_link_libraries(coin PRIVATE pthread cpprestsdk::cpprest sqlite3)
 
-add_executable(testMe ./test/main.cpp ./src/jsoncpp.cpp ./src/orderBook.cpp ./src/coinBaseClient.cpp)
+add_executable(testMe ./test/main.cpp ./src/jsoncpp.cpp ./src/orderBook.cpp ./src/coinBaseClient.cpp ./src/database.cpp)
 target_link_libraries(testMe benchmark::benchmark pthread cpprestsdk::cpprest sqlite3)
