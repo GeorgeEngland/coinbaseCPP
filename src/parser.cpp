@@ -4,9 +4,10 @@
 void Parser::usage(const char *argv[]){
     std::cerr << std::endl << std::endl;
     std::cerr << "USAGE:" << std::endl;
-    std::cerr << argv[0] << " --instrument INSTRUMENT" << std::endl;
+    std::cerr << argv[0] << " --instrument INSTRUMENT" << " --db DATABASE_PATH" << std::endl;
     std::cerr << std::endl;
-    std::cerr << "--instrument INSTRUMENT  instrument abbreviation, e.g. \"ETH-USD\"" << std::endl;
+    std::cerr << "--instrument INSTRUMENT = instrument abbreviation, e.g. \"ETH-USD\"" << std::endl;
+    std::cerr << "--db DATABASE_PATH = path to datavase, e.g. \"./path/to/database\"" << std::endl;
     std::cerr << std::endl;
 }
 
@@ -18,10 +19,13 @@ int Parser::parseInput(int argc,char const* argv[]){
     }
     for (int i = 1; i <= argc - 2; i += 2) {
         const std::string opt(argv[i]);
-        std::cout<<"Option: "<<opt<<"--"<<argv[i + 1]<<std::endl;
+        std::cout<<"Option: "<<opt<<"   "<<argv[i + 1]<<std::endl;
         if (opt == "--instrument") {
             m_instrument.push_back(argv[i + 1]);
-         } 
+         }
+         else if(opt == "--db") {
+            m_databasePath=argv[i + 1];
+         }
 
         else {
             std::cerr << "Unknown option " << opt << ", usage:"; usage(argv);
@@ -34,4 +38,8 @@ int Parser::parseInput(int argc,char const* argv[]){
 }
 std::vector<std::string> Parser::getInstruments(){
     return m_instrument;
+}
+
+std::string Parser::getDatabasePath(){
+    return m_databasePath;
 }

@@ -5,35 +5,45 @@
 #include <json/json.h>
 #include <mutex>
 #include "timer.h"
+#include "database.h"
 
-coinBaseClient::coinBaseClient(std::string wsAddr,Json::Value message)
-:_wsAddress(wsAddr){}
+coinBaseClient::coinBaseClient(std::string wsAddr,Json::Value message,std::shared_ptr<database::Database> dataBPtr)
+:_wsAddress(wsAddr), _dataBPtr(dataBPtr){
+    for(auto instrument : message["product_ids"]){
+            std::string name = instrument.asString();
+            size_t p = name.find_first_of("-");
+            name.replace(p,1,"_");
+            std::cout<<"NAME IS "<<name<<std::endl;
+            _dataBPtr->createTable(name);
+        }
+}
 
 void coinBaseClient::connect2(Json::Value message){
-    
     connect(_wsAddress).then([message,this](){
         for(auto instrument : message["product_ids"]){
-            this->_books[instrument.asString()]=new orderBook();
+            this->_books[instrument.asString()]=new orderBook(instrument.asString());
+            //this->_dataBPtr->createTable(instrument.asString());
         }
-        _oBook = new orderBook();
-        onOpen(message);
-        
+        //_oBook = new orderBook();
+        onOpen(message);        
     }).wait();
+    std::cout<<"\nSetting Message Handler...";
+
     set_message_handler([this](web::websockets::client::websocket_incoming_message msg){
-//        Timer* t1 = new Timer("Whole Function");
+        Timer* t1 = new Timer("Whole Function");
         _ordersProcessed++;
-        msg.extract_string().then([this](std::string body) {
+        msg.extract_string().then([this,t1](std::string body) {
 //            Timer* t2 = new Timer("Algo");
             mu.lock();
             
             onReceive(body);
 //            delete(t2);
-//            delete(t1);
             mu.unlock();
+            delete(t1);
 
         });
     });
-    std::cout<<"Set Message Handler"<<std::endl;
+    std::cout<<"... Success."<<std::endl;
 
 
     set_close_handler([this](web::websockets::client::websocket_close_status close_status, const utility::string_t &reason, const std::error_code &error){
@@ -61,13 +71,13 @@ void coinBaseClient::onReceive(std::string body){
             _tStart = std::chrono::high_resolution_clock::now();
             _ordersProcessed=0;
         }
-        
+
         if(out != Json::ValueType::nullValue && out["product_id"] != Json::ValueType::nullValue){
             //std::string type = out["type"].asString();
            // Timer t3("\nHandle Message");
            _books[out["product_id"].asString()]->handleMessage(out["type"].asString(),out);
-             std::cout<<"BOOK NAME: "<<out["product_id"].asString()<<std::endl;
-             _books[out["product_id"].asString()]->displayBook(10);
+             //std::cout<<"BOOK NAME: "<<out["product_id"].asString()<<std::endl;
+             //_books[out["product_id"].asString()]->displayBook(10);
         }
 
         //_oBook->displayBook(10);

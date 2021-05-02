@@ -10,7 +10,7 @@ static void BM_HANDLE_SNAP(benchmark::State& state) {
     std::ifstream f("./test/SNAPSHOT.json");
     Json::Value snap;
     f >> snap;
-    orderBook oBook;
+    orderBook oBook("ETH-BTC");
   for (auto _ : state) {
     // This code gets timed
     for(int i=0;i<state.range(0);i++)
@@ -31,7 +31,7 @@ static void BM_HANDLE_L2(benchmark::State& state) {
     Json::Value snap2;
     f2 >> snap2;
 
-    orderBook oBook;
+    orderBook oBook(snap2["product_id"].asString());
     oBook.handleMessage("snapshot",snap);
 
   for (auto _ : state) {
@@ -52,7 +52,7 @@ static void BM_HANDLE_X_L2THREADS(benchmark::State& state) {
     Json::Value snap2;
     f2 >> snap2;
 
-    orderBook* oBook = new orderBook();
+    orderBook* oBook = new orderBook(snap2["product_id"].asString());
     oBook->handleMessage("snapshot",snap);
     
     oBook->testVal = snap2;

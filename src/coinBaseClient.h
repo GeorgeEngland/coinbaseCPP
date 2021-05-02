@@ -10,11 +10,11 @@ class coinBaseClient : web::web_sockets::client::websocket_callback_client{
     std::mutex mu;
     std::atomic<int> _ordersProcessed{0};
     std::chrono::high_resolution_clock::time_point _tStart;
-
     public:
+    std::shared_ptr<database::Database> _dataBPtr;
     std::unordered_map<std::string,orderBook*> _books;
     orderBook *_oBook;
-    coinBaseClient(std::string wsAddr,Json::Value message );
+    coinBaseClient(std::string wsAddr,Json::Value message,std::shared_ptr<database::Database> dataBPtr );
     coinBaseClient()=delete;
     void onOpen(Json::Value message);
     void connect2(Json::Value message);

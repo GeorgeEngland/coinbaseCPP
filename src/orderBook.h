@@ -1,6 +1,9 @@
 #include <json/json.h>
 #include <iostream>
-
+#include <sqlite3.h>
+#include <string>
+#include <memory>
+#include "database.h"
 #ifndef ORDERBOOK_H
 #define ORDERBOOK_H
 
@@ -24,6 +27,8 @@ class orderItem{
 class orderBook{
     orderItem* _bidHead;
     orderItem* _askHead;
+    std::string _instrument;
+    std::shared_ptr<database::Database> DB;
     void handleL2Update(Json::Value& msg);
     void handleSell(int price, float quant);
     void handleBuy(int price, float quant);
@@ -32,11 +37,14 @@ class orderBook{
 
     public:
     Json::Value testVal;
+    
     void test(std::string msg){return;}
     void displayBook(int depth);
     void handleMessage(std::string type, Json::Value& msg);
     void handleMessageTest(std::string type);
-    orderBook():_bidHead(nullptr),_askHead(nullptr){}
+    orderBook(std::string instrument):_bidHead(nullptr),_askHead(nullptr),_instrument(instrument){
+
+    }
 
 };
 #endif /* ORDERBOOK_H */
