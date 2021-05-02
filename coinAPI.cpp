@@ -1,11 +1,13 @@
 
 #include <iostream>
 #include <cpprest/ws_client.h>
+
 #include <json/json.h>
 #include "src/coinBaseClient.h"
 #include <thread>
 #include "src/parser.h"
-#include <sqlite3.h>
+#include "src/database.h"
+#include <memory>
 using namespace std;
 using namespace web;
 using namespace web::websockets::client;
@@ -18,13 +20,13 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
    return 0;
 }
 int main(int argc, char const *argv[]) {
-
+/*
   sqlite3 *db;
   char *zErrMsg = 0;
   int rc;
   char *sql;
 
-  /* Open database */
+  
   rc = sqlite3_open("./db/testDB.db", &db);
 
 if( rc ) {
@@ -34,7 +36,6 @@ if( rc ) {
       fprintf(stdout, "Opened database successfully\n");
    }
 
-   /* Create SQL statement */
    sql = "CREATE TABLE COMPANY("  \
       "ID INT PRIMARY KEY     NOT NULL," \
       "NAME           TEXT    NOT NULL," \
@@ -42,7 +43,6 @@ if( rc ) {
       "ADDRESS        CHAR(50)," \
       "SALARY         REAL );";
 
-   /* Execute SQL statement */
    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
    
    if( rc != SQLITE_OK ){
@@ -52,35 +52,16 @@ if( rc ) {
       fprintf(stdout, "Table created successfully\n");
    }
 
-/* Create SQL statement */
-   sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) "  \
-         "VALUES (1, 'Paul', 32, 'California', 20000.00 ); " \
-         "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) "  \
-         "VALUES (2, 'Allen', 25, 'Texas', 15000.00 ); "     \
-         "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" \
-         "VALUES (3, 'Teddy', 23, 'Norway', 20000.00 );" \
-         "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY)" \
-         "VALUES (4, 'Mark', 25, 'Rich-Mond ', 65000.00 );";
-
-   /* Execute SQL statement */
-   rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-   
-   if( rc != SQLITE_OK ){
-      fprintf(stderr, "SQL error: %s\n", zErrMsg);
-      sqlite3_free(zErrMsg);
-   } else {
-      fprintf(stdout, "Records created successfully\n");
-   }
-
-
-
    sqlite3_close(db);
 
+*/
 
 
   Parser p;
   if(p.parseInput(argc,argv)==1)return -1;
-  
+   //database::Database* db = database::Database(p.getDatabasePath());
+   auto dataBPtr = std::make_shared<database::Database>( database::Database(p.getDatabasePath()) );
+
   Json::Value root;
   Json::Value infoRoot;
   std::string address= "wss://ws-feed.pro.coinbase.com";
@@ -103,9 +84,9 @@ if( rc ) {
   root["channels"][1]="heartbeat";
   root["channels"][2]=infoRoot;
 
-  coinBaseClient c(address,root);
+  coinBaseClient c(address,root,dataBPtr);
   c.connect2(root);
-  std::this_thread::sleep_for(10s);
+  std::this_thread::sleep_for(30s);
   std::cout<<"Shutting Down AT End Of Thread Length"<<std::endl;
 
   return 0;
